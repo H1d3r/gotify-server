@@ -14,6 +14,7 @@ import (
 	"github.com/gotify/server/v2/model"
 	"github.com/gotify/server/v2/test/testdb"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 	"github.com/stretchr/testify/suite"
 )
 
@@ -39,9 +40,12 @@ func (s *SessionSuite) BeforeTest(suiteName, testName string) {
 	s.notified = false
 	s.a = &SessionAPI{DB: s.db, NotifyDeleted: s.notify}
 
+	pw, err := password.CreatePassword("testpass", 5)
+	require.NoError(s.T(), err)
+
 	s.db.CreateUser(&model.User{
 		Name: "testuser",
-		Pass: password.CreatePassword("testpass", 5),
+		Pass: pw,
 	})
 }
 

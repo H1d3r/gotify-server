@@ -13,7 +13,8 @@ func TestConfigEnv(t *testing.T) {
 	mode.Set(mode.TestDev)
 	os.Setenv("GOTIFY_DEFAULTUSER_NAME", "jmattheis")
 	os.Setenv("GOTIFY_SERVER_SSL_LETSENCRYPT_HOSTS", "push.example.tld,push.other.tld")
-	os.Setenv("GOTIFY_SERVER_RESPONSEHEADERS",
+	os.Setenv(
+		"GOTIFY_SERVER_RESPONSEHEADERS",
 		`{"Access-Control-Allow-Origin":"*","Access-Control-Allow-Methods":"GET,POST"}`,
 	)
 	os.Setenv("GOTIFY_SERVER_CORS_ALLOWORIGINS", ".+.example.com,otherdomain.com")
