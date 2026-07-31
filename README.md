@@ -13,9 +13,6 @@
     <a href="https://codecov.io/gh/gotify/server">
         <img alt="codecov" src="https://codecov.io/gh/gotify/server/branch/master/graph/badge.svg">
     </a>
-    <a href="https://goreportcard.com/report/github.com/gotify/server">
-        <img alt="Go Report Card" src="https://goreportcard.com/badge/github.com/gotify/server">
-    </a>
     <a href="https://matrix.to/#/#gotify:matrix.org">
         <img alt="Matrix" src="https://img.shields.io/matrix/gotify:matrix.org.svg">
     </a>
