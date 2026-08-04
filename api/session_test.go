@@ -38,7 +38,7 @@ func (s *SessionSuite) BeforeTest(suiteName, testName string) {
 	s.ctx, _ = gin.CreateTestContext(s.recorder)
 	withURL(s.ctx, "http", "example.com")
 	s.notified = false
-	s.a = &SessionAPI{DB: s.db, NotifyDeleted: s.notify}
+	s.a = &SessionAPI{DB: s.db, NotifyDeleted: s.notify, LocalAuthEnabled: true}
 
 	pw, err := password.CreatePassword("testpass", 5)
 	require.NoError(s.T(), err)
@@ -91,6 +91,21 @@ func (s *SessionSuite) Test_Login_Success() {
 	assert.Len(s.T(), clients, 1)
 	assert.Equal(s.T(), "test-browser", clients[0].Name)
 	assert.Equal(s.T(), uint(auth.CookieMaxAge), clients[0].ExpiresAfterInactivitySeconds)
+}
+
+func (s *SessionSuite) Test_Login_LocalAuthDisabled() {
+	s.a.LocalAuthEnabled = false
+	s.ctx.Request = httptest.NewRequest("POST", "/auth/local/login", strings.NewReader("name=test-browser"))
+	s.ctx.Request.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+	s.ctx.Request.Header.Set("Authorization", "Basic "+base64.StdEncoding.EncodeToString([]byte("testuser:testpass")))
+
+	s.a.Login(s.ctx)
+
+	assert.Equal(s.T(), 403, s.recorder.Code)
+
+	for _, c := range s.recorder.Result().Cookies() {
+		assert.NotEqual(s.T(), auth.CookieName, c.Name)
+	}
 }
 
 func (s *SessionSuite) Test_Login_WrongPassword() {
