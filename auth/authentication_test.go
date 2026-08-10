@@ -13,6 +13,7 @@ import (
 	"github.com/gotify/server/v2/model"
 	"github.com/gotify/server/v2/test/testdb"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 	"github.com/stretchr/testify/suite"
 )
 
@@ -37,9 +38,12 @@ func (s *AuthenticationSuite) SetupSuite() {
 	elevated := now.Add(time.Hour)
 	expired := now.Add(-time.Hour)
 
+	pw, err := password.CreatePassword("pw", 5)
+	require.NoError(s.T(), err)
+
 	s.DB.CreateUser(&model.User{
 		Name:         "existing",
-		Pass:         password.CreatePassword("pw", 5),
+		Pass:         pw,
 		Admin:        false,
 		Applications: []model.Application{{Token: "apptoken", Name: "backup server1", Description: "irrelevant"}},
 		Clients: []model.Client{
@@ -51,7 +55,7 @@ func (s *AuthenticationSuite) SetupSuite() {
 
 	s.DB.CreateUser(&model.User{
 		Name:         "admin",
-		Pass:         password.CreatePassword("pw", 5),
+		Pass:         pw,
 		Admin:        true,
 		Applications: []model.Application{{Token: "apptoken_admin", Name: "backup server2", Description: "irrelevant"}},
 		Clients: []model.Client{
