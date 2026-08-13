@@ -30,7 +30,7 @@ type AuthenticationSuite struct {
 func (s *AuthenticationSuite) SetupSuite() {
 	mode.Set(mode.TestDev)
 	s.DB = testdb.NewDB(s.T())
-	s.auth = &Auth{DB: s.DB, CrossOrigin: http.NewCrossOriginProtection()}
+	s.auth = &Auth{DB: s.DB, LocalAuthEnabled: true, CrossOrigin: http.NewCrossOriginProtection()}
 
 	now := time.Date(2025, 1, 1, 12, 0, 0, 0, time.UTC)
 	timeNow = func() time.Time { return now }
@@ -272,6 +272,16 @@ func (s *AuthenticationSuite) TestBasicAuth() {
 	s.assertHeaderRequest("Authorization", "Basic bm90ZXhpc3Rpbmc6cHc=", s.auth.RequireClient, 401)
 	s.assertHeaderRequest("Authorization", "Basic bm90ZXhpc3Rpbmc6cHc=", s.auth.RequireAdmin, 401)
 	s.assertHeaderRequest("Authorization", "Basic bm90ZXhpc3Rpbmc6cHc=", s.auth.RequireElevatedClient, 401)
+}
+
+func (s *AuthenticationSuite) TestBasicAuthDisabled() {
+	s.auth.LocalAuthEnabled = false
+	defer func() { s.auth.LocalAuthEnabled = true }()
+
+	s.assertHeaderRequest("Authorization", "Basic YWRtaW46cHc=", s.auth.RequireApplicationToken, 403)
+	s.assertHeaderRequest("Authorization", "Basic YWRtaW46cHc=", s.auth.RequireClient, 403)
+	s.assertHeaderRequest("Authorization", "Basic YWRtaW46cHc=", s.auth.RequireAdmin, 403)
+	s.assertHeaderRequest("Authorization", "Basic YWRtaW46cHc=", s.auth.RequireElevatedClient, 403)
 }
 
 func (s *AuthenticationSuite) TestOptionalAuth() {

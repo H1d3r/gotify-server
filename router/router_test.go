@@ -42,7 +42,7 @@ func (s *IntegrationSuite) BeforeTest(string, string) {
 	g, closable := Create(
 		s.db.GormDatabase,
 		&model.VersionInfo{Version: "1.0.0", BuildDate: "2018-02-20-17:30:47", Commit: "asdasds"},
-		&config.Configuration{PassStrength: 5},
+		&config.Configuration{PassStrength: 5, LocalAuthEnabled: true},
 	)
 	s.closable = closable
 	s.server = httptest.NewServer(g)
