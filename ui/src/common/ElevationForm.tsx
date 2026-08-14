@@ -18,6 +18,7 @@ const ElevationForm = observer(() => {
     const localAuthEnabled = config.get('localAuth');
     const oidcEnabled = config.get('oidc');
     const oidcPending = elevateStore.oidcElevatePending;
+    const oidcIdpName = config.get('oidcIdpName');
 
     const handleLocalElevate = async () => {
         try {
@@ -91,7 +92,7 @@ const ElevationForm = observer(() => {
                         color="primary"
                         fullWidth
                         onClick={() => elevateStore.oidcElevate(ElevateDuration)}>
-                        Elevate via OIDC
+                        {`Elevate via ${oidcIdpName}`}
                     </Button>
                 </>
             )}

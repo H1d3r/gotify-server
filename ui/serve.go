@@ -16,19 +16,21 @@ import (
 var box embed.FS
 
 type uiConfig struct {
-	Register  bool              `json:"register"`
-	Version   model.VersionInfo `json:"version"`
-	LocalAuth bool              `json:"localAuth"`
-	OIDC      bool              `json:"oidc"`
+	Register    bool              `json:"register"`
+	Version     model.VersionInfo `json:"version"`
+	LocalAuth   bool              `json:"localAuth"`
+	OIDC        bool              `json:"oidc"`
+	OIDCIDPName string            `json:"oidcIdpName"`
 }
 
 // Register registers the ui on the root path.
-func Register(r *gin.Engine, version model.VersionInfo, register, localAuthEnabled, oidcEnabled bool) {
+func Register(r *gin.Engine, version model.VersionInfo, register bool, oidcEnabled bool, localAuthEnabled bool, oidcIDPName string) {
 	uiConfigBytes, err := json.Marshal(uiConfig{
-		Version:   version,
-		Register:  register,
-		LocalAuth: localAuthEnabled,
-		OIDC:      oidcEnabled,
+		Version:     version,
+		Register:    register,
+		LocalAuth:   localAuthEnabled,
+		OIDC:        oidcEnabled,
+		OIDCIDPName: oidcIDPName,
 	})
 	if err != nil {
 		panic(err)

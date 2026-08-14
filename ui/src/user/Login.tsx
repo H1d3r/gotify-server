@@ -19,6 +19,8 @@ const Login = observer(() => {
     const navigate = useNavigate();
     const localAuthEnabled = config.get('localAuth');
     const oidcEnabled = config.get('oidc');
+    const oidcIdpName = config.get('oidcIdpName');
+
     React.useEffect(() => {
         if (currentUser.loggedIn) {
             navigate('/');
@@ -103,7 +105,7 @@ const Login = observer(() => {
                                 size="large"
                                 color="primary"
                                 style={{marginBottom: 5}}>
-                                Login with OIDC
+                                {`Login with ${oidcIdpName}`}
                             </Button>
                         </>
                     )}

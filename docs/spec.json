@@ -2947,7 +2947,8 @@
         "version",
         "register",
         "localAuth",
-        "oidc"
+        "oidc",
+        "oidcIdpName"
       ],
       "properties": {
         "localAuth": {
@@ -2961,6 +2962,12 @@
           "type": "boolean",
           "x-go-name": "Oidc",
           "example": true
+        },
+        "oidcIdpName": {
+          "description": "Name of the OIDC identity provider.",
+          "type": "string",
+          "x-go-name": "OIDCIDPName",
+          "example": "OIDC"
         },
         "register": {
           "description": "If registration is enabled.",
