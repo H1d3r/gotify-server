@@ -24,7 +24,14 @@ type uiConfig struct {
 }
 
 // Register registers the ui on the root path.
-func Register(r *gin.Engine, version model.VersionInfo, register bool, oidcEnabled bool, localAuthEnabled bool, oidcIDPName string) {
+func Register(
+	r *gin.Engine,
+	version model.VersionInfo,
+	register bool,
+	localAuthEnabled bool,
+	oidcEnabled bool,
+	oidcIDPName string,
+) {
 	uiConfigBytes, err := json.Marshal(uiConfig{
 		Version:     version,
 		Register:    register,
