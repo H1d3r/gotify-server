@@ -24,4 +24,9 @@ type GotifyInfo struct {
 	// required: true
 	// example: true
 	Oidc bool `json:"oidc"`
+	// Name of the OIDC identity provider.
+	//
+	// required: true
+	// example: OIDC
+	OIDCIDPName string `json:"oidcIdpName"`
 }
