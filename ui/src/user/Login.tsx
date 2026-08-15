@@ -105,7 +105,7 @@ const Login = observer(() => {
                                 size="large"
                                 color="primary"
                                 style={{marginBottom: 5}}>
-                                {`Login with ${oidcIdpName}`}
+                                Login with {oidcIdpName}
                             </Button>
                         </>
                     )}
