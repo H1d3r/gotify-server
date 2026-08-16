@@ -2618,7 +2618,7 @@
           "example": "AWH0wZ5r0Mbac.r"
         }
       },
-      "x-go-package": "github.com/gotify/server/v2/model"
+      "x-go-package": "github.com/gotify/server/v3/model"
     },
     "ApplicationParams": {
       "description": "Params allowed to create or update Applications.",
@@ -2654,7 +2654,7 @@
           "example": "a1"
         }
       },
-      "x-go-package": "github.com/gotify/server/v2/api"
+      "x-go-package": "github.com/gotify/server/v3/api"
     },
     "Client": {
       "description": "The Client holds information about a device which can receive notifications (and other stuff).",
@@ -2726,7 +2726,7 @@
           "example": "CWH0wZ5r0Mbac.r"
         }
       },
-      "x-go-package": "github.com/gotify/server/v2/model"
+      "x-go-package": "github.com/gotify/server/v3/model"
     },
     "ClientParams": {
       "description": "Params allowed to create or update Clients.",
@@ -2750,7 +2750,7 @@
           "example": "My Client"
         }
       },
-      "x-go-package": "github.com/gotify/server/v2/api"
+      "x-go-package": "github.com/gotify/server/v3/api"
     },
     "CreateMessage": {
       "description": "The CreateMessage holds information about a message that will be sent.",
@@ -2801,7 +2801,7 @@
           "example": "Backup"
         }
       },
-      "x-go-package": "github.com/gotify/server/v2/model"
+      "x-go-package": "github.com/gotify/server/v3/model"
     },
     "CreateUserExternal": {
       "description": "Used for user creation.",
@@ -2832,7 +2832,7 @@
           "example": "nrocinu"
         }
       },
-      "x-go-package": "github.com/gotify/server/v2/model"
+      "x-go-package": "github.com/gotify/server/v3/model"
     },
     "CurrentUser": {
       "description": "CurrentUserExternal Model",
@@ -2889,7 +2889,7 @@
         }
       },
       "x-go-name": "CurrentUserExternal",
-      "x-go-package": "github.com/gotify/server/v2/model"
+      "x-go-package": "github.com/gotify/server/v3/model"
     },
     "ElevateRequest": {
       "type": "object",
@@ -2906,7 +2906,7 @@
           "example": 900
         }
       },
-      "x-go-package": "github.com/gotify/server/v2/model"
+      "x-go-package": "github.com/gotify/server/v3/model"
     },
     "Error": {
       "description": "The Error contains error relevant information.",
@@ -2938,7 +2938,7 @@
           "example": "you need to provide a valid access token or user credentials to access this api"
         }
       },
-      "x-go-package": "github.com/gotify/server/v2/model"
+      "x-go-package": "github.com/gotify/server/v3/model"
     },
     "GotifyInfo": {
       "description": "GotifyInfo Model",
@@ -2982,7 +2982,7 @@
           "example": "5.2.6"
         }
       },
-      "x-go-package": "github.com/gotify/server/v2/model"
+      "x-go-package": "github.com/gotify/server/v3/model"
     },
     "Health": {
       "description": "Health represents how healthy the application is.",
@@ -3006,7 +3006,7 @@
           "example": "green"
         }
       },
-      "x-go-package": "github.com/gotify/server/v2/model"
+      "x-go-package": "github.com/gotify/server/v3/model"
     },
     "Message": {
       "description": "The MessageExternal holds information about a message which was sent by an Application.",
@@ -3078,7 +3078,7 @@
         }
       },
       "x-go-name": "MessageExternal",
-      "x-go-package": "github.com/gotify/server/v2/model"
+      "x-go-package": "github.com/gotify/server/v3/model"
     },
     "OIDCExternalAuthorizeRequest": {
       "description": "Used to initiate the OIDC authorization flow for an external client.",
@@ -3109,7 +3109,7 @@
           "example": "gotify://oidc/callback"
         }
       },
-      "x-go-package": "github.com/gotify/server/v2/model"
+      "x-go-package": "github.com/gotify/server/v3/model"
     },
     "OIDCExternalAuthorizeResponse": {
       "description": "Returned after initiating the OIDC authorization flow.",
@@ -3133,7 +3133,7 @@
           "example": "Android Phone:a1b2c3d4e5f6"
         }
       },
-      "x-go-package": "github.com/gotify/server/v2/model"
+      "x-go-package": "github.com/gotify/server/v3/model"
     },
     "OIDCExternalTokenRequest": {
       "description": "Used to exchange an authorization code for a gotify client token.",
@@ -3163,7 +3163,7 @@
           "example": "Android Phone:a1b2c3d4e5f6"
         }
       },
-      "x-go-package": "github.com/gotify/server/v2/model"
+      "x-go-package": "github.com/gotify/server/v3/model"
     },
     "OIDCExternalTokenResponse": {
       "description": "Returned after a successful token exchange.",
@@ -3184,7 +3184,7 @@
           "$ref": "#/definitions/User"
         }
       },
-      "x-go-package": "github.com/gotify/server/v2/model"
+      "x-go-package": "github.com/gotify/server/v3/model"
     },
     "PagedMessages": {
       "description": "Wrapper for the paging and the messages.",
@@ -3208,7 +3208,7 @@
           "$ref": "#/definitions/Paging"
         }
       },
-      "x-go-package": "github.com/gotify/server/v2/model"
+      "x-go-package": "github.com/gotify/server/v3/model"
     },
     "Paging": {
       "description": "The Paging holds information about the limit and making requests to the next page.",
@@ -3255,7 +3255,7 @@
           "example": 5
         }
       },
-      "x-go-package": "github.com/gotify/server/v2/model"
+      "x-go-package": "github.com/gotify/server/v3/model"
     },
     "PluginConf": {
       "description": "Holds information about a plugin instance for one user.",
@@ -3348,7 +3348,7 @@
         }
       },
       "x-go-name": "PluginConfExternal",
-      "x-go-package": "github.com/gotify/server/v2/model"
+      "x-go-package": "github.com/gotify/server/v3/model"
     },
     "RegenerateTokenResponse": {
       "description": "The RegenerateTokenResponse holds information about the response to the regenerate token action.",
@@ -3366,7 +3366,7 @@
           "example": "gtfya.e2NcJK7AenXBPIRB3S03JsBlmy0V6xP8h0hwSiAJae8"
         }
       },
-      "x-go-package": "github.com/gotify/server/v2/model"
+      "x-go-package": "github.com/gotify/server/v3/model"
     },
     "SecurityUpdateAction": {
       "description": "The SecurityUpdateAction describes the details of a requested security update.",
@@ -3380,7 +3380,7 @@
           "example": true
         }
       },
-      "x-go-package": "github.com/gotify/server/v2/model"
+      "x-go-package": "github.com/gotify/server/v3/model"
     },
     "SecurityUpdateActionResponse": {
       "description": "The SecurityUpdateActionResponse holds information about the response to a security update request.",
@@ -3391,7 +3391,7 @@
           "$ref": "#/definitions/RegenerateTokenResponse"
         }
       },
-      "x-go-package": "github.com/gotify/server/v2/model"
+      "x-go-package": "github.com/gotify/server/v3/model"
     },
     "UpdateUserExternal": {
       "description": "Used for updating a user.",
@@ -3421,7 +3421,7 @@
           "example": "nrocinu"
         }
       },
-      "x-go-package": "github.com/gotify/server/v2/model"
+      "x-go-package": "github.com/gotify/server/v3/model"
     },
     "User": {
       "description": "The User holds information about permission and other stuff.",
@@ -3464,7 +3464,7 @@
         }
       },
       "x-go-name": "UserExternal",
-      "x-go-package": "github.com/gotify/server/v2/model"
+      "x-go-package": "github.com/gotify/server/v3/model"
     },
     "UserPass": {
       "description": "The Password for updating the user.",
@@ -3482,7 +3482,7 @@
         }
       },
       "x-go-name": "UserExternalPass",
-      "x-go-package": "github.com/gotify/server/v2/model"
+      "x-go-package": "github.com/gotify/server/v3/model"
     },
     "VersionInfo": {
       "description": "VersionInfo Model",
@@ -3512,7 +3512,7 @@
           "example": "5.2.6"
         }
       },
-      "x-go-package": "github.com/gotify/server/v2/model"
+      "x-go-package": "github.com/gotify/server/v3/model"
     }
   },
   "securityDefinitions": {
