@@ -4,7 +4,7 @@ import (
 	"time"
 
 	"github.com/gorilla/websocket"
-	"github.com/gotify/server/v2/model"
+	"github.com/gotify/server/v3/model"
 	"github.com/rs/zerolog/log"
 )
 
