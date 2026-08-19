@@ -66,6 +66,7 @@ func NewOIDC(conf *config.Configuration, db *database.GormDatabase, userChangeNo
 		SecureCookie:       conf.Server.SecureCookie,
 		AutoRegister:       conf.OIDC.AutoRegister,
 		LinkByUsername:     conf.OIDC.LinkByUsername,
+		Prompt:             conf.OIDC.Prompt,
 		pendingSessions:    decaymap.NewDecayMap[string, *pendingOIDCSession](time.Now(), pendingSessionMaxAge),
 	}
 }
@@ -94,6 +95,7 @@ type OIDCAPI struct {
 	SecureCookie       bool
 	AutoRegister       bool
 	LinkByUsername     bool
+	Prompt             []string
 	pendingSessions    *decaymap.DecayMap[string, *pendingOIDCSession]
 }
 
@@ -131,7 +133,7 @@ func (a *OIDCAPI) LoginHandler() gin.HandlerFunc {
 			return
 		}
 		a.pendingSessions.Set(time.Now(), state, &pendingOIDCSession{ClientName: clientName, CreatedAt: time.Now()})
-		rp.AuthURLHandler(func() string { return state }, a.Provider)(w, r)
+		rp.AuthURLHandler(func() string { return state }, a.Provider, a.promptURLParams()...)(w, r)
 	})
 }
 
@@ -174,7 +176,14 @@ func (a *OIDCAPI) ElevateHandler(ctx *gin.Context) {
 		return
 	}
 	a.pendingSessions.Set(time.Now(), state, &pendingOIDCSession{CreatedAt: time.Now(), Elevate: &elevate})
-	rp.AuthURLHandler(func() string { return state }, a.Provider)(ctx.Writer, ctx.Request)
+	rp.AuthURLHandler(func() string { return state }, a.Provider, a.promptURLParams()...)(ctx.Writer, ctx.Request)
+}
+
+func (a *OIDCAPI) promptURLParams() []rp.URLParamOpt {
+	if len(a.Prompt) == 0 {
+		return nil
+	}
+	return []rp.URLParamOpt{rp.WithPromptURLParam(a.Prompt...)}
 }
 
 // swagger:operation GET /auth/oidc/callback oidc oidcCallback
@@ -314,6 +323,9 @@ func (a *OIDCAPI) ExternalAuthorizeHandler(ctx *gin.Context) {
 	authOpts := []rp.AuthURLOpt{
 		rp.AuthURLOpt(rp.WithURLParam("redirect_uri", req.RedirectURI)),
 		rp.WithCodeChallenge(req.CodeChallenge),
+	}
+	for _, opt := range a.promptURLParams() {
+		authOpts = append(authOpts, rp.AuthURLOpt(opt))
 	}
 	ctx.JSON(http.StatusOK, &model.OIDCExternalAuthorizeResponse{
 		AuthorizeURL: rp.AuthURL(state, a.Provider, authOpts...),

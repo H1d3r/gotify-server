@@ -23,6 +23,7 @@ func TestConfigEnv(t *testing.T) {
 	t.Setenv("GOTIFY_SERVER_CORS_ALLOWHEADERS", "Authorization,content-type")
 	t.Setenv("GOTIFY_SERVER_STREAM_ALLOWEDORIGINS", ".+.example.com,otherdomain.com")
 	t.Setenv("GOTIFY_OIDC_IDP_NAME", "Company XYZ SSO")
+	t.Setenv("GOTIFY_OIDC_PROMPT", "")
 
 	conf, _ := Get()
 	assert.Equal(t, 80, conf.Server.Port, "should use defaults")
@@ -35,6 +36,8 @@ func TestConfigEnv(t *testing.T) {
 	assert.Equal(t, []string{"Authorization", "content-type"}, conf.Server.Cors.AllowHeaders)
 	assert.Equal(t, []string{".+.example.com", "otherdomain.com"}, conf.Server.Stream.AllowedOrigins)
 	assert.Equal(t, "Company XYZ SSO", conf.OIDC.IDPName)
+	assert.Equal(t, []string{}, conf.OIDC.Prompt)
+	assert.Equal(t, []string{"openid", "profile", "email"}, conf.OIDC.Scopes)
 }
 
 func TestLocalAuthDisabled(t *testing.T) {

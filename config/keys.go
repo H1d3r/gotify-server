@@ -44,5 +44,6 @@ const (
 	EnvOIDCScopes                       = "GOTIFY_OIDC_SCOPES"
 	EnvOIDCIDPName                      = "GOTIFY_OIDC_IDP_NAME"
 	EnvOIDCAutoRedirect                 = "GOTIFY_OIDC_AUTO_REDIRECT"
+	EnvOIDCPrompt                       = "GOTIFY_OIDC_PROMPT"
 	EnvNoColor                          = "NOCOLOR"
 )

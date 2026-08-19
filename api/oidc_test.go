@@ -1,7 +1,11 @@
 package api
 
 import (
+	"context"
+	"encoding/json"
+	"net/http"
 	"net/http/httptest"
+	"net/url"
 	"strings"
 	"testing"
 	"time"
@@ -14,6 +18,7 @@ import (
 	"github.com/gotify/server/v3/test/testdb"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/suite"
+	"github.com/zitadel/oidc/v3/pkg/client/rp"
 	"github.com/zitadel/oidc/v3/pkg/oidc"
 )
 
@@ -60,6 +65,92 @@ func (s *OIDCSuite) Test_GenerateState_Unique() {
 	s1, _ := s.a.generateState()
 	s2, _ := s.a.generateState()
 	assert.NotEqual(s.T(), s1, s2)
+}
+
+// --- LoginHandler ---
+
+func newDiscoveryServer(t *testing.T) *httptest.Server {
+	t.Helper()
+	mux := http.NewServeMux()
+	server := httptest.NewServer(mux)
+	t.Cleanup(server.Close)
+	mux.HandleFunc("/.well-known/openid-configuration", func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "application/json")
+		_ = json.NewEncoder(w).Encode(map[string]any{
+			"issuer":                 server.URL,
+			"authorization_endpoint": server.URL + "/authorize",
+			"token_endpoint":         server.URL + "/token",
+			"userinfo_endpoint":      server.URL + "/userinfo",
+			"jwks_uri":               server.URL + "/keys",
+		})
+	})
+	return server
+}
+
+func (s *OIDCSuite) Test_LoginHandler_AuthURL() {
+	issuer := newDiscoveryServer(s.T())
+
+	provider, err := rp.NewRelyingPartyOIDC(
+		context.Background(), issuer.URL, "client", "secret", "https://gotify.example/callback", []string{"openid"},
+	)
+	assert.NoError(s.T(), err)
+	s.a.Provider = provider
+
+	tests := []struct {
+		name       string
+		prompt     []string
+		wantPrompt string
+	}{
+		{name: "default prompt", prompt: []string{"login"}, wantPrompt: "login"},
+		{name: "custom prompt", prompt: []string{"consent"}, wantPrompt: "consent"},
+		{name: "empty prompt disables the parameter", prompt: []string{}, wantPrompt: ""},
+	}
+
+	for _, tc := range tests {
+		s.Run(tc.name, func() {
+			s.a.Prompt = tc.prompt
+			recorder := httptest.NewRecorder()
+			ctx, _ := gin.CreateTestContext(recorder)
+			ctx.Request = httptest.NewRequest("GET", "/auth/oidc/login?name=testclient", nil)
+
+			s.a.LoginHandler()(ctx)
+
+			location, err := url.Parse(recorder.Header().Get("Location"))
+			assert.NoError(s.T(), err)
+			query := location.Query()
+			assert.NotEmpty(s.T(), query.Get("state"))
+			assert.Equal(s.T(), tc.wantPrompt, query.Get("prompt"))
+			assert.Equal(s.T(), "client", query.Get("client_id"))
+			assert.Equal(s.T(), "https://gotify.example/callback", query.Get("redirect_uri"))
+			assert.Equal(s.T(), "openid", query.Get("scope"))
+		})
+	}
+}
+
+func (s *OIDCSuite) Test_ElevateHandler_AuthURL() {
+	issuer := newDiscoveryServer(s.T())
+
+	provider, err := rp.NewRelyingPartyOIDC(
+		context.Background(), issuer.URL, "client", "secret", "https://gotify.example/callback", []string{"openid"},
+	)
+	assert.NoError(s.T(), err)
+	s.a.Provider = provider
+	s.a.Prompt = []string{"login"}
+
+	recorder := httptest.NewRecorder()
+	ctx, _ := gin.CreateTestContext(recorder)
+	ctx.Request = httptest.NewRequest("GET", "/auth/oidc/elevate?id=1&durationSeconds=60", nil)
+
+	s.a.ElevateHandler(ctx)
+
+	location, err := url.Parse(recorder.Header().Get("Location"))
+	assert.NoError(s.T(), err)
+	query := location.Query()
+	assert.NotEmpty(s.T(), query.Get("state"))
+	assert.Equal(s.T(), "login", query.Get("prompt"))
+	assert.Equal(s.T(), "client", query.Get("client_id"))
+	assert.Equal(s.T(), "https://gotify.example/callback", query.Get("redirect_uri"))
+	assert.Equal(s.T(), "openid", query.Get("scope"))
 }
 
 func (s *OIDCSuite) Test_ResolveUser_ReturningUser_MatchedByOIDCID() {
@@ -249,6 +340,39 @@ func (s *OIDCSuite) Test_CreateClient() {
 }
 
 // --- ExternalAuthorizeHandler ---
+
+func (s *OIDCSuite) Test_ExternalAuthorizeHandler_AuthURL() {
+	issuer := newDiscoveryServer(s.T())
+
+	provider, err := rp.NewRelyingPartyOIDC(
+		context.Background(), issuer.URL, "client", "secret", "https://gotify.example/callback", []string{"openid"},
+	)
+	assert.NoError(s.T(), err)
+	s.a.Provider = provider
+	s.a.Prompt = []string{"login"}
+
+	recorder := httptest.NewRecorder()
+	ctx, _ := gin.CreateTestContext(recorder)
+	ctx.Request = httptest.NewRequest("POST", "/auth/oidc/external/authorize", strings.NewReader(
+		`{"code_challenge":"challenge","redirect_uri":"gotify://oidc/callback","name":"Android Phone"}`,
+	))
+	ctx.Request.Header.Set("Content-Type", "application/json")
+
+	s.a.ExternalAuthorizeHandler(ctx)
+
+	assert.Equal(s.T(), 200, recorder.Code)
+	response := model.OIDCExternalAuthorizeResponse{}
+	assert.NoError(s.T(), json.Unmarshal(recorder.Body.Bytes(), &response))
+	authorizeURL, err := url.Parse(response.AuthorizeURL)
+	assert.NoError(s.T(), err)
+	query := authorizeURL.Query()
+	assert.Equal(s.T(), response.State, query.Get("state"))
+	assert.Equal(s.T(), "gotify://oidc/callback", query.Get("redirect_uri"))
+	assert.Equal(s.T(), "challenge", query.Get("code_challenge"))
+	assert.Equal(s.T(), "login", query.Get("prompt"))
+	assert.Equal(s.T(), "client", query.Get("client_id"))
+	assert.Equal(s.T(), "openid", query.Get("scope"))
+}
 
 func (s *OIDCSuite) Test_ExternalAuthorizeHandler_MissingFields() {
 	s.ctx.Request = httptest.NewRequest("POST", "/auth/oidc/external/authorize", strings.NewReader(`{}`))
