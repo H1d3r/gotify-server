@@ -69,6 +69,7 @@ type OIDC struct {
 	LinkByUsername bool
 	Scopes         []string
 	IDPName        string
+	AutoRedirect   bool
 }
 
 type Configuration struct {
@@ -183,6 +184,7 @@ func Get() (*Configuration, []FutureLog) {
 	add(parseBool(&c.OIDC.LinkByUsername, EnvOIDCLinkByUsername))
 	add(parseList(&c.OIDC.Scopes, EnvOIDCScopes))
 	add(parseString(&c.OIDC.IDPName, EnvOIDCIDPName))
+	add(parseBool(&c.OIDC.AutoRedirect, EnvOIDCAutoRedirect))
 
 	add(parseString(&c.NoColor, EnvNoColor))
 

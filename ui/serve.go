@@ -16,11 +16,12 @@ import (
 var box embed.FS
 
 type uiConfig struct {
-	Register    bool              `json:"register"`
-	Version     model.VersionInfo `json:"version"`
-	LocalAuth   bool              `json:"localAuth"`
-	OIDC        bool              `json:"oidc"`
-	OIDCIDPName string            `json:"oidcIdpName"`
+	Register         bool              `json:"register"`
+	Version          model.VersionInfo `json:"version"`
+	LocalAuth        bool              `json:"localAuth"`
+	OIDC             bool              `json:"oidc"`
+	OIDCIDPName      string            `json:"oidcIdpName"`
+	OIDCAutoRedirect bool              `json:"oidcAutoRedirect"`
 }
 
 // Register registers the ui on the root path.
@@ -31,13 +32,15 @@ func Register(
 	localAuthEnabled bool,
 	oidcEnabled bool,
 	oidcIDPName string,
+	oidcAutoRedirect bool,
 ) {
 	uiConfigBytes, err := json.Marshal(uiConfig{
-		Version:     version,
-		Register:    register,
-		LocalAuth:   localAuthEnabled,
-		OIDC:        oidcEnabled,
-		OIDCIDPName: oidcIDPName,
+		Version:          version,
+		Register:         register,
+		LocalAuth:        localAuthEnabled,
+		OIDC:             oidcEnabled,
+		OIDCIDPName:      oidcIDPName,
+		OIDCAutoRedirect: oidcAutoRedirect,
 	})
 	if err != nil {
 		panic(err)

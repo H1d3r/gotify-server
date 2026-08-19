@@ -43,5 +43,6 @@ const (
 	EnvLocalAuthEnabled                 = "GOTIFY_LOCALAUTH_ENABLED"
 	EnvOIDCScopes                       = "GOTIFY_OIDC_SCOPES"
 	EnvOIDCIDPName                      = "GOTIFY_OIDC_IDP_NAME"
+	EnvOIDCAutoRedirect                 = "GOTIFY_OIDC_AUTO_REDIRECT"
 	EnvNoColor                          = "NOCOLOR"
 )
