@@ -69,6 +69,8 @@ type OIDC struct {
 	LinkByUsername bool
 	Scopes         []string
 	IDPName        string
+	AutoRedirect   bool
+	Prompt         []string
 }
 
 type Configuration struct {
@@ -119,6 +121,7 @@ func Get() (*Configuration, []FutureLog) {
 			AutoRegister:  true,
 			Scopes:        []string{"openid", "profile", "email"},
 			IDPName:       "OIDC",
+			Prompt:        []string{"login"},
 		},
 	}
 
@@ -183,6 +186,8 @@ func Get() (*Configuration, []FutureLog) {
 	add(parseBool(&c.OIDC.LinkByUsername, EnvOIDCLinkByUsername))
 	add(parseList(&c.OIDC.Scopes, EnvOIDCScopes))
 	add(parseString(&c.OIDC.IDPName, EnvOIDCIDPName))
+	add(parseBool(&c.OIDC.AutoRedirect, EnvOIDCAutoRedirect))
+	add(parseList(&c.OIDC.Prompt, EnvOIDCPrompt))
 
 	add(parseString(&c.NoColor, EnvNoColor))
 

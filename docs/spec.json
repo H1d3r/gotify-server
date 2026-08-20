@@ -2948,7 +2948,8 @@
         "register",
         "localAuth",
         "oidc",
-        "oidcIdpName"
+        "oidcIdpName",
+        "oidcAutoRedirect"
       ],
       "properties": {
         "localAuth": {
@@ -2962,6 +2963,12 @@
           "type": "boolean",
           "x-go-name": "Oidc",
           "example": true
+        },
+        "oidcAutoRedirect": {
+          "description": "If the WebUI should automatically redirect to the OIDC identity\nprovider instead of showing the login page.",
+          "type": "boolean",
+          "x-go-name": "OIDCAutoRedirect",
+          "example": false
         },
         "oidcIdpName": {
           "description": "Name of the OIDC identity provider.",

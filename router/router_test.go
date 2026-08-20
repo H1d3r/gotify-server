@@ -66,8 +66,7 @@ func (s *IntegrationSuite) TestVersionInfo() {
 
 func (s *IntegrationSuite) TestGotifyInfo() {
 	req := s.newRequest("GET", "gotifyinfo", "")
-
-	doRequestAndExpect(s.T(), req, 200, `{"version":"1.0.0", "oidc":false, "register":false, "localAuth":true, "oidcIdpName":"Company XYZ SSO"}`)
+	doRequestAndExpect(s.T(), req, 200, `{"version":"1.0.0", "oidc":false, "register":false, "localAuth":true, "oidcIdpName":"Company XYZ SSO", "oidcAutoRedirect":false}`)
 }
 
 func (s *IntegrationSuite) TestHeaderInProd() {

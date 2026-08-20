@@ -9,7 +9,7 @@ import * as config from '../config';
 import RegistrationDialog from './Register';
 import {useStores} from '../stores';
 import {observer} from 'mobx-react-lite';
-import {useNavigate} from 'react-router';
+import {useNavigate, useSearchParams} from 'react-router';
 
 const Login = observer(() => {
     const [username, setUsername] = React.useState('');
@@ -17,15 +17,30 @@ const Login = observer(() => {
     const [registerDialog, setRegisterDialog] = React.useState(false);
     const {currentUser} = useStores();
     const navigate = useNavigate();
+    const [searchParams] = useSearchParams();
     const localAuthEnabled = config.get('localAuth');
     const oidcEnabled = config.get('oidc');
     const oidcIdpName = config.get('oidcIdpName');
 
+    const oidcAutoRedirect =
+        oidcEnabled &&
+        config.get('oidcAutoRedirect') &&
+        searchParams.get('redirect') !== 'false' &&
+        !currentUser.connectionErrorMessage;
+    const oidcLoginUrl =
+        config.get('url') +
+        'auth/oidc/login?name=' +
+        encodeURIComponent(currentUser.createClientName());
     React.useEffect(() => {
         if (currentUser.loggedIn) {
             navigate('/');
+            return;
         }
-    }, [currentUser.loggedIn]);
+        if (!currentUser.authenticating && oidcAutoRedirect) {
+            window.location.href = oidcLoginUrl;
+        }
+    }, [currentUser.loggedIn, currentUser.authenticating, oidcAutoRedirect]);
+
     const registerButton = () => {
         if (localAuthEnabled && config.get('register'))
             return (
@@ -96,11 +111,7 @@ const Login = observer(() => {
                             <Button
                                 id="oidc-login"
                                 component="a"
-                                href={
-                                    config.get('url') +
-                                    'auth/oidc/login?name=' +
-                                    encodeURIComponent(currentUser.createClientName())
-                                }
+                                href={oidcLoginUrl}
                                 variant="outlined"
                                 size="large"
                                 color="primary"

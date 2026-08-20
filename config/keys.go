@@ -32,6 +32,7 @@ const (
 	EnvUploadedImagesDir                = "GOTIFY_UPLOADEDIMAGESDIR"
 	EnvPluginsDir                       = "GOTIFY_PLUGINSDIR"
 	EnvRegistration                     = "GOTIFY_REGISTRATION"
+	EnvLocalAuthEnabled                 = "GOTIFY_LOCALAUTH_ENABLED"
 	EnvOIDCEnabled                      = "GOTIFY_OIDC_ENABLED"
 	EnvOIDCIssuer                       = "GOTIFY_OIDC_ISSUER"
 	EnvOIDCClientID                     = "GOTIFY_OIDC_CLIENTID"
@@ -40,8 +41,9 @@ const (
 	EnvOIDCRedirectURL                  = "GOTIFY_OIDC_REDIRECTURL"
 	EnvOIDCAutoRegister                 = "GOTIFY_OIDC_AUTOREGISTER"
 	EnvOIDCLinkByUsername               = "GOTIFY_OIDC_LINK_BY_USERNAME"
-	EnvLocalAuthEnabled                 = "GOTIFY_LOCALAUTH_ENABLED"
 	EnvOIDCScopes                       = "GOTIFY_OIDC_SCOPES"
 	EnvOIDCIDPName                      = "GOTIFY_OIDC_IDP_NAME"
+	EnvOIDCAutoRedirect                 = "GOTIFY_OIDC_AUTO_REDIRECT"
+	EnvOIDCPrompt                       = "GOTIFY_OIDC_PROMPT"
 	EnvNoColor                          = "NOCOLOR"
 )

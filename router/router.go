@@ -120,7 +120,7 @@ func Create(db *database.GormDatabase, vInfo *model.VersionInfo, conf *config.Co
 	userChangeNotifier.OnUserDeleted(pluginManager.RemoveUser)
 	userChangeNotifier.OnUserAdded(pluginManager.InitializeForUserID)
 
-	ui.Register(g, *vInfo, conf.Registration, conf.LocalAuthEnabled, conf.OIDC.Enabled, conf.OIDC.IDPName)
+	ui.Register(g, *vInfo, conf.Registration, conf.LocalAuthEnabled, conf.OIDC.Enabled, conf.OIDC.IDPName, conf.OIDC.AutoRedirect)
 
 	if conf.OIDC.Enabled {
 		oidcHandler := api.NewOIDC(conf, db, userChangeNotifier)
@@ -192,11 +192,12 @@ func Create(db *database.GormDatabase, vInfo *model.VersionInfo, conf *config.Co
 	//         $ref: "#/definitions/GotifyInfo"
 	g.GET("gotifyinfo", func(ctx *gin.Context) {
 		ctx.JSON(200, &model.GotifyInfo{
-			Version:     vInfo.Version,
-			Oidc:        conf.OIDC.Enabled,
-			Register:    conf.Registration,
-			LocalAuth:   conf.LocalAuthEnabled,
-			OIDCIDPName: conf.OIDC.IDPName,
+			Version:          vInfo.Version,
+			Oidc:             conf.OIDC.Enabled,
+			Register:         conf.Registration,
+			LocalAuth:        conf.LocalAuthEnabled,
+			OIDCIDPName:      conf.OIDC.IDPName,
+			OIDCAutoRedirect: conf.OIDC.AutoRedirect,
 		})
 	})
 
